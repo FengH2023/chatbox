@@ -38,7 +38,7 @@ jobs:
           export CHATBOX_BUILD_TARGET=mobile_app
           export CHATBOX_BUILD_PLATFORM=ios
           npx electron-vite build
-          pnpm run delete-sourcemaps
+          find release -name "*.js.map" -type f -delete 2>/dev/null || true
 
       - name: Add iOS platform
         run: npx cap add ios

@@ -779,7 +779,7 @@ export function ChatConfig({
       <Stack gap="xs">
         <Flex align="center" gap="xs">
           <Text size="sm" fw="600">
-            Top P
+            {t('Top P')}
           </Text>
           <Tooltip
             label={t(

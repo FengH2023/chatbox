@@ -16,7 +16,7 @@ const CHATBOXAI_IMAGE_MODEL_IDS = [
   'gemini-3.1-flash-image-preview',
   'gemini-3.1-flash-image',
 ]
-const OPENAI_IMAGE_MODEL_IDS = ['gpt-image-1', 'gpt-image-1.5']
+const OPENAI_IMAGE_MODEL_IDS = ['gpt-image-2', 'gpt-image-1', 'gpt-image-1.5']
 const GEMINI_IMAGE_MODEL_IDS = [
   'gemini-2.5-flash-image',
   'gemini-3-pro-image-preview',
@@ -32,6 +32,7 @@ export const CHATBOXAI_DEFAULT_IMAGE_MODEL: ImageModel = {
 
 const IMAGE_MODEL_FALLBACK_NAMES: Record<string, string> = {
   'chatboxai-paint': 'Chatbox AI Paint',
+  'gpt-image-2': 'GPT Image 2',
   'gpt-image-1': 'GPT Image 1',
   'gpt-image-1.5': 'GPT Image 1.5',
   'gemini-2.5-flash-image': 'Nano Banana',

@@ -31,6 +31,9 @@ import './setup/sentry_init'
 // 全局错误处理
 import './setup/global_error_handler'
 
+// 移动端中转 API 绕过 WebView CORS
+import './setup/mobile_sub2api_fetch_patch'
+
 // GA4 初始化
 import './setup/ga_init'
 
@@ -49,7 +52,7 @@ import { initSettingsStore } from './stores/settingsStore'
 import('./setup/token_estimation_init')
 
 // 引入移动端安全区域代码，主要为了解决异形屏幕的问题
-if (CHATBOX_BUILD_TARGET === 'mobile_app' && CHATBOX_BUILD_PLATFORM === 'ios') {
+if (CHATBOX_BUILD_TARGET === 'mobile_app') {
   import('./setup/mobile_safe_area')
 }
 
@@ -136,7 +139,7 @@ initializeApp()
     // 等待settings初始化完成，避免闪屏
     const [settings] = await Promise.all([initSettingsStore(), initLastUsedModelStore()])
 
-    i18n.changeLanguage(settings.language)
+    i18n.changeLanguage(platform.type === 'mobile' ? 'zh-Hans' : settings.language)
     // 初始化完成，可以开始渲染
     ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <StrictMode>

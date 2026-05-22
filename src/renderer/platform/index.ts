@@ -11,6 +11,10 @@ function initPlatform(): Platform {
   }
   if (typeof window !== 'undefined' && window.electronAPI) {
     return new DesktopPlatform(window.electronAPI)
+  } else if (CHATBOX_BUILD_TARGET === 'mobile_app') {
+    const platform = new WebPlatform()
+    platform.type = 'mobile'
+    return platform
   } else {
     return new WebPlatform()
   }

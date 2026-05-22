@@ -29,7 +29,7 @@ i18n.use(initReactI18next).init({
       translation: { ...zhHant, ...authErrorOverrides['zh-Hant'] },
     },
     en: {
-      translation: { ...en, ...authErrorOverrides.en },
+      translation: { ...zhHans, ...authErrorOverrides['zh-Hans'] },
     },
     ja: {
       translation: ja,
@@ -65,7 +65,8 @@ i18n.use(initReactI18next).init({
       translation: nbNO,
     },
   },
-  fallbackLng: 'en',
+  lng: 'zh-Hans',
+  fallbackLng: 'zh-Hans',
 
   interpolation: {
     escapeValue: false,

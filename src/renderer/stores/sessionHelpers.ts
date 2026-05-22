@@ -582,7 +582,7 @@ export function initEmptyChatSession(): Omit<Session, 'id'> {
   const settings = settingsStore.getState().getSettings()
   const { chat: lastUsedChatModel } = lastUsedModelStore.getState()
   const newSession: Omit<Session, 'id'> = {
-    name: 'Untitled',
+    name: '未命名',
     type: 'chat',
     messages: [],
     settings: {
@@ -607,7 +607,7 @@ export function initEmptyPictureSession(): Omit<Session, 'id'> {
   const { picture: lastUsedPictureModel } = lastUsedModelStore.getState()
 
   return {
-    name: 'Untitled',
+    name: '未命名',
     type: 'picture',
     messages: [createMessage('system', i18n.t('Image Creator Intro') || '')],
     settings: {

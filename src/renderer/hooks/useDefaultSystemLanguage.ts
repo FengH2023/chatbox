@@ -4,6 +4,14 @@ import platform from '../platform'
 
 export function useSystemLanguageWhenInit() {
   useEffect(() => {
+    if (platform.type === 'mobile') {
+      settingsStore.setState({
+        language: 'zh-Hans',
+        languageInited: true,
+      })
+      return
+    }
+
     // 通过定时器延迟启动，防止处理状态底层存储的异步加载前错误的初始数据
     setTimeout(() => {
       ;(async () => {

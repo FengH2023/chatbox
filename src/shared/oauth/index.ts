@@ -11,6 +11,45 @@ export interface OAuthProviderInfo {
   flowType: 'callback' | 'code-paste' | 'device-code'
 }
 
+export interface OAuthCredentials {
+  accessToken: string
+  refreshToken?: string
+  expiresAt?: number
+}
+
+export interface OAuthResult {
+  success: boolean
+  credentials?: OAuthCredentials
+  error?: string
+}
+
+export interface OAuthStartResult {
+  success: boolean
+  url?: string
+  state?: string
+  error?: string
+}
+
+export interface DeviceFlowStartResult {
+  success: boolean
+  verificationUri?: string
+  userCode?: string
+  deviceCode?: string
+  expiresIn?: number
+  interval?: number
+  error?: string
+}
+
+export const OAuthIpcChannels = {
+  CANCEL: 'oauth:cancel',
+  LOGIN: 'oauth:login',
+  START_LOGIN: 'oauth:start-login',
+  EXCHANGE_CODE: 'oauth:exchange-code',
+  START_DEVICE_FLOW: 'oauth:start-device-flow',
+  WAIT_DEVICE_TOKEN: 'oauth:wait-device-token',
+  REFRESH: 'oauth:refresh',
+} as const
+
 export function mergeSharedOAuthProviderSettings(
   providerId: string,
   providers: Record<string, ProviderSettings> | undefined

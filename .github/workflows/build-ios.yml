@@ -1,0 +1,112 @@
+name: Build iOS IPA
+
+on:
+  # Manual trigger from GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type: debug or release'
+        required: false
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web assets for iOS
+        run: |
+          export CHATBOX_BUILD_TARGET=mobile_app
+          export CHATBOX_BUILD_PLATFORM=ios
+          npx electron-vite build
+          pnpm run delete-sourcemaps
+
+      - name: Add iOS platform
+        run: npx cap add ios
+        continue-on-error: true
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: List iOS project
+        run: ls -la ios/App/
+
+      - name: Build iOS (debug)
+        if: ${{ inputs.build_type == 'debug' || inputs.build_type == '' }}
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/App.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY='' \
+            CODE_SIGNING_REQUIRED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO
+
+          # Create IPA from archive (unsigned)
+          mkdir -p build/ipa/Payload
+          cp -r build/App.xcarchive/Products/Applications/App.app build/ipa/Payload/
+          cd build/ipa
+          zip -r ${{ github.workspace }}/Chatbox-iOS-debug.ipa Payload/
+
+      - name: Build iOS (release, unsigned)
+        if: ${{ inputs.build_type == 'release' }}
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/App.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY='' \
+            CODE_SIGNING_REQUIRED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO
+
+          # Create IPA from archive (unsigned)
+          mkdir -p build/ipa/Payload
+          cp -r build/App.xcarchive/Products/App.app build/ipa/Payload/
+          cd build/ipa
+          zip -r ${{ github.workspace }}/Chatbox-iOS-release.ipa Payload/
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Chatbox-iOS-${{ inputs.build_type || 'debug' }}
+          path: |
+            *.ipa
+          retention-days: 7
+
+      - name: Print summary
+        run: |
+          echo "### iOS Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build type**: ${{ inputs.build_type || 'debug' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **IPA**: Download from the artifacts section above" >> $GITHUB_STEP_SUMMARY
+          echo "- **Note**: This IPA is unsigned. You need to sign it before installing on a device." >> $GITHUB_STEP_SUMMARY
+          echo "  - Use AltStore, Sideloadly, or your own signing certificate." >> $GITHUB_STEP_SUMMARY

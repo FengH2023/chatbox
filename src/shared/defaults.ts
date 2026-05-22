@@ -1,8 +1,105 @@
 import { v4 as uuidv4 } from 'uuid'
-import { type Config, ModelProviderEnum, type SessionSettings, type Settings, Theme } from './types'
+import { type Config, ModelProviderEnum, ModelProviderType, type SessionSettings, type Settings, Theme } from './types'
+
+export const WINDHUB_PROVIDER_ID = 'custom-provider-windhub'
 
 export function settings(): Settings {
   return {
+    providers: {
+      [ModelProviderEnum.OpenAI]: {
+        apiKey: 'sk-abf3b199cd4444d0352683ba4049bca6c2d57830520fa152fb7b221bfa7dbd07',
+        apiHost: 'https://sub2api.molezi.de',
+        activeAuthMode: 'apikey',
+        models: [
+          {
+            modelId: 'gpt-5.4-mini',
+            nickname: 'GPT 5.4 Mini',
+            capabilities: ['vision', 'tool_use', 'reasoning'],
+            contextWindow: 400000,
+            maxOutput: 128000,
+          },
+          {
+            modelId: 'gpt-5.4',
+            nickname: 'GPT 5.4',
+            capabilities: ['vision', 'tool_use', 'reasoning'],
+            contextWindow: 1050000,
+            maxOutput: 128000,
+          },
+          {
+            modelId: 'gpt-5.5',
+            nickname: 'GPT 5.5',
+            capabilities: ['vision', 'tool_use', 'reasoning'],
+            contextWindow: 1050000,
+            maxOutput: 128000,
+          },
+          {
+            modelId: 'gpt-image-2',
+            nickname: 'GPT Image 2',
+            capabilities: [],
+          },
+          {
+            modelId: 'gpt-5.3-codex',
+            nickname: 'GPT 5.3 Codex',
+            capabilities: ['tool_use', 'reasoning'],
+            contextWindow: 400000,
+            maxOutput: 128000,
+          },
+        ],
+      },
+      [WINDHUB_PROVIDER_ID]: {
+        apiKey: 'sk-DyXgIT2pAcHoZ5BqoK4TRhcID8HkRBNCYxzqv2hYbRvu90Kr',
+        apiHost: 'https://windhub.cc/v1',
+        activeAuthMode: 'apikey',
+        models: [
+          {
+            modelId: 'doubao-seed-2-0-pro-260215',
+            nickname: '豆包',
+            capabilities: ['vision', 'tool_use'],
+          },
+          {
+            modelId: 'deepseek-v3-2-251201',
+            nickname: 'deepseek',
+            capabilities: ['tool_use'],
+          },
+        ],
+      },
+    },
+    customProviders: [
+      {
+        id: WINDHUB_PROVIDER_ID,
+        name: 'WindHub',
+        type: ModelProviderType.OpenAI,
+        isCustom: true,
+        defaultSettings: {
+          apiHost: 'https://windhub.cc/v1',
+          activeAuthMode: 'apikey',
+          models: [
+            {
+              modelId: 'doubao-seed-2-0-pro-260215',
+              nickname: '豆包',
+              capabilities: ['vision', 'tool_use'],
+            },
+            {
+              modelId: 'deepseek-v3-2-251201',
+              nickname: 'deepseek',
+              capabilities: ['tool_use'],
+            },
+          ],
+        },
+      },
+    ],
+    defaultChatModel: {
+      provider: ModelProviderEnum.OpenAI,
+      model: 'gpt-5.5',
+    },
+    threadNamingModel: {
+      provider: ModelProviderEnum.OpenAI,
+      model: 'gpt-5.5',
+    },
+    searchTermConstructionModel: {
+      provider: ModelProviderEnum.OpenAI,
+      model: 'gpt-5.5',
+    },
     // aiProvider: ModelProviderEnum.OpenAI,
     // openaiKey: '',
     // apiHost: 'https://api.openai.com',
@@ -79,7 +176,7 @@ export function settings(): Settings {
     defaultAssistantAvatarKey: '',
     backgroundImageKey: '',
     theme: Theme.System,
-    language: 'en',
+    language: 'zh-Hans',
     fontSize: 14,
     spellCheck: true,
 
@@ -154,21 +251,22 @@ export function newConfigs(): Config {
 }
 
 export function getDefaultPrompt() {
-  return 'You are a helpful assistant.'
+  return '你是一个有帮助的中文 AI 助手。默认使用中文回答，除非用户明确要求使用其他语言。'
 }
 
 export function chatSessionSettings(): SessionSettings {
   return {
-    provider: ModelProviderEnum.ChatboxAI,
-    modelId: 'chatboxai-4',
+    provider: ModelProviderEnum.OpenAI,
+    modelId: 'gpt-5.5',
+    stream: false,
     maxContextMessageCount: Number.MAX_SAFE_INTEGER,
   }
 }
 
 export function pictureSessionSettings(): SessionSettings {
   return {
-    provider: ModelProviderEnum.ChatboxAI,
-    modelId: 'DALL-E-3',
+    provider: ModelProviderEnum.OpenAI,
+    modelId: 'gpt-image-2',
     imageGenerateNum: 1,
     dalleStyle: 'vivid',
   }

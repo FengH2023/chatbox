@@ -72,17 +72,15 @@ function DefaultErrorFallback({ error, retry }: DefaultErrorFallbackProps) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
         <div className="text-red-500 text-6xl mb-4">⚠️</div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Something went wrong!</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          The application encountered an unexpected error. This error has been automatically reported.
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">出错了</h1>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">应用遇到意外错误，请重试或重新加载应用。</p>
 
         <div className="space-y-3">
           <button
             onClick={retry}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
           >
-            Try Again
+            重试
           </button>
 
           <button
@@ -92,14 +90,14 @@ function DefaultErrorFallback({ error, retry }: DefaultErrorFallbackProps) {
             }}
             className="w-full bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors"
           >
-            Reload App
+            重新加载应用
           </button>
 
           <button
             onClick={() => setShowDetails(!showDetails)}
             className="w-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-4 py-2 rounded-md transition-colors text-sm"
           >
-            {showDetails ? 'Hide Error' : 'Show Error'}
+            {showDetails ? '隐藏错误' : '显示错误'}
           </button>
         </div>
 
@@ -108,7 +106,7 @@ function DefaultErrorFallback({ error, retry }: DefaultErrorFallbackProps) {
             <div className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
               {error && (
                 <div>
-                  <strong>Error:</strong>
+                  <strong>错误：</strong>
                   <pre className="mt-1 text-xs overflow-auto whitespace-pre-wrap">
                     {error.name}: {error.message}
                   </pre>
@@ -116,7 +114,7 @@ function DefaultErrorFallback({ error, retry }: DefaultErrorFallbackProps) {
               )}
               {error?.stack && (
                 <div>
-                  <strong>Stack:</strong>
+                  <strong>堆栈：</strong>
                   <pre className="mt-1 text-xs overflow-auto whitespace-pre-wrap max-h-32">{error.stack}</pre>
                 </div>
               )}

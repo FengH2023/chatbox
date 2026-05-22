@@ -1,20 +1,20 @@
 import type { Language } from '../../shared/types'
 
 export const languageNameMap: Record<Language, string> = {
-  en: 'English',
+  en: '英语',
   'zh-Hans': '简体中文',
-  'zh-Hant': '繁體中文',
-  ja: '日本語',
-  ko: '한국어',
-  ru: 'Русский', // Russian
-  de: 'Deutsch', // German
-  fr: 'Français', // French
-  'pt-PT': 'Português', // Portuguese
-  es: 'Español', // Spanish
-  ar: 'العربية', // Arabic
-  'it-IT': 'Italiano', // Italian
-  sv: 'Svenska', // Swedish 瑞典语
-  'nb-NO': 'Norsk', // Norwegian 挪威语
+  'zh-Hant': '繁体中文',
+  ja: '日语',
+  ko: '韩语',
+  ru: '俄语',
+  de: '德语',
+  fr: '法语',
+  'pt-PT': '葡萄牙语',
+  es: '西班牙语',
+  ar: '阿拉伯语',
+  'it-IT': '意大利语',
+  sv: '瑞典语',
+  'nb-NO': '挪威语',
 }
 
 export const languages = Array.from(Object.keys(languageNameMap)) as Language[]

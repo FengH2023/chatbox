@@ -1,8 +1,10 @@
 packages:
   - .
   - release/app
+cacheDir: C:\software\chatbox-build-env\pnpm-cache
 
 # Supply chain security: only install packages published at least 7 days ago
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - "@ruguoapp/*"
+storeDir: C:\software\chatbox-build-env\pnpm-store

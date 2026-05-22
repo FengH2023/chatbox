@@ -1,5 +1,21 @@
 import type { ModelDependencies } from '../../types/adapters'
-import { ApiError } from '../errors'
+
+function headersToRecord(headers?: HeadersInit): Record<string, string> {
+  if (!headers) {
+    return {}
+  }
+  if (headers instanceof Headers) {
+    const result: Record<string, string> = {}
+    headers.forEach((value, key) => {
+      result[key] = value
+    })
+    return result
+  }
+  if (Array.isArray(headers)) {
+    return Object.fromEntries(headers)
+  }
+  return headers as Record<string, string>
+}
 
 /**
  * Creates a fetch function that uses proxy when enabled,
@@ -8,7 +24,7 @@ import { ApiError } from '../errors'
 export function createFetchWithProxy(useProxy: boolean | undefined, dependencies: ModelDependencies) {
   return async (url: RequestInfo | URL, init?: RequestInit) => {
     const method = init?.method || 'GET'
-    const headers = (init?.headers as Record<string, string>) || {}
+    const headers = headersToRecord(init?.headers)
 
     if (method === 'POST') {
       const response = await dependencies.request.apiRequest({

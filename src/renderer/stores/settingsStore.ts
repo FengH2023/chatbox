@@ -3,6 +3,7 @@
 
 import * as defaults from '@shared/defaults'
 import { type ProviderSettings, type Settings, SettingsSchema } from '@shared/types'
+import { ModelProviderEnum } from '@shared/types'
 import type { DocumentParserConfig } from '@shared/types/settings'
 import deepmerge from 'deepmerge'
 import type { WritableDraft } from 'immer'
@@ -114,6 +115,27 @@ export const initSettingsStore = async () => {
   if (!_initSettingsStorePromise) {
     _initSettingsStorePromise = new Promise<Settings>((resolve) => {
       const unsub = settingsStore.persist.onFinishHydration((val) => {
+        if (platform.type === 'mobile') {
+          const defaultSettings = defaults.settings()
+          settingsStore.setState((state) => ({
+            ...state,
+            language: 'zh-Hans',
+            languageInited: true,
+            providers: {
+              ...state.providers,
+              [ModelProviderEnum.OpenAI]: defaultSettings.providers?.[ModelProviderEnum.OpenAI],
+              [defaults.WINDHUB_PROVIDER_ID]: defaultSettings.providers?.[defaults.WINDHUB_PROVIDER_ID],
+            },
+            customProviders: [
+              ...(state.customProviders ?? []).filter((provider) => provider.id !== defaults.WINDHUB_PROVIDER_ID),
+              ...(defaultSettings.customProviders ?? []),
+            ],
+            defaultChatModel: defaultSettings.defaultChatModel,
+            threadNamingModel: defaultSettings.threadNamingModel,
+            searchTermConstructionModel: defaultSettings.searchTermConstructionModel,
+          }))
+          val = settingsStore.getState()
+        }
         const providers = val?.providers
         const providersCount =
           providers && typeof providers === 'object' && !Array.isArray(providers) ? Object.keys(providers).length : 0

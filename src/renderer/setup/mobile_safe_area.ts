@@ -3,12 +3,32 @@
 // 通过这些变量，可以在css中设置安全区域的padding，margin等，来规避异形屏的显示问题
 // 为了达到最好的效果，在 html 的 meta 标签中设置 viewport-fit=cover
 
-import { SafeArea } from 'capacitor-plugin-safe-area'
 import { Keyboard } from '@capacitor/keyboard'
+import { SafeArea } from 'capacitor-plugin-safe-area'
+import { CHATBOX_BUILD_PLATFORM } from '@/variables'
+
+const ANDROID_STATUS_BAR_FALLBACK_TOP = 32
+
+function setSafeAreaInsets(insets: Record<string, number>) {
+  const nextInsets = { ...insets }
+  if (CHATBOX_BUILD_PLATFORM === 'android') {
+    nextInsets.top = Math.max(nextInsets.top || 0, ANDROID_STATUS_BAR_FALLBACK_TOP)
+  }
+
+  for (const [key, value] of Object.entries(nextInsets)) {
+    document.documentElement.style.setProperty(`--mobile-safe-area-inset-${key}`, `${Math.max(0, value)}px`)
+  }
+}
 
 SafeArea.getSafeAreaInsets().then(({ insets }) => {
-  for (const [key, value] of Object.entries(insets)) {
-    document.documentElement.style.setProperty(`--mobile-safe-area-inset-${key}`, `${value}px`)
+  setSafeAreaInsets(insets)
+  if (CHATBOX_BUILD_PLATFORM === 'android' && !insets.top) {
+    SafeArea.getStatusBarHeight().then(({ statusBarHeight }) => {
+      document.documentElement.style.setProperty(
+        '--mobile-safe-area-inset-top',
+        `${Math.max(0, statusBarHeight || 0)}px`
+      )
+    })
   }
 })
 
@@ -19,9 +39,7 @@ SafeArea.getStatusBarHeight().then(({ statusBarHeight }) => {
   // when safe-area changed
   const eventListener = await SafeArea.addListener('safeAreaChanged', (data) => {
     const { insets } = data
-    for (const [key, value] of Object.entries(insets)) {
-      document.documentElement.style.setProperty(`--mobile-safe-area-inset-${key}`, `${value}px`)
-    }
+    setSafeAreaInsets(insets)
   })
   // eventListener.remove();
 })()
@@ -32,8 +50,6 @@ Keyboard.addListener('keyboardWillShow', async (info) => {
 
 Keyboard.addListener('keyboardWillHide', () => {
   SafeArea.getSafeAreaInsets().then(({ insets }) => {
-    for (const [key, value] of Object.entries(insets)) {
-      document.documentElement.style.setProperty(`--mobile-safe-area-inset-${key}`, `${value}px`)
-    }
+    setSafeAreaInsets(insets)
   })
 })

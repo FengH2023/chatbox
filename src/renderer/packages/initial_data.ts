@@ -4,7 +4,7 @@ import { ModelProviderEnum, Session } from '../../shared/types'
 export const defaultSessionsForEN: Session[] = [
   {
     id: 'justchat-b612-406a-985b-3ab4d2c482ff',
-    name: 'Just chat',
+    name: '自由聊天',
     type: 'chat',
     messages: [
       {
@@ -17,7 +17,7 @@ export const defaultSessionsForEN: Session[] = [
   },
   {
     id: '6dafa15e-c72f-4036-ac89-33c09e875bdc',
-    name: 'Markdown 101 (Example)',
+    name: 'Markdown 入门（示例）',
     type: 'chat',
     starred: true,
     messages: [
@@ -56,7 +56,7 @@ export const defaultSessionsForEN: Session[] = [
   },
   {
     id: 'e22ab364-4681-4e24-aaba-461ed0fccfd3',
-    name: 'Travel Guide (Example)',
+    name: '旅行指南（示例）',
     type: 'chat',
     picUrl: 'https://static.chatboxai.app/copilot-avatar/travel.png',
     messages: [
@@ -85,7 +85,7 @@ export const defaultSessionsForEN: Session[] = [
   },
   {
     id: '55d92e88-02af-4c3b-a378-aa0a1970abb1',
-    name: 'Social Media Influencer (Example)',
+    name: '社交媒体助手（示例）',
     type: 'chat',
     picUrl: 'https://static.chatboxai.app/copilot-avatar/twitter.png',
     messages: [
@@ -114,7 +114,7 @@ export const defaultSessionsForEN: Session[] = [
   },
   {
     id: '35df5a96-b612-406a-985b-3ab4d2c481ff',
-    name: 'Software Developer (Example)',
+    name: '软件开发者（示例）',
     type: 'chat',
     picUrl: 'https://static.chatboxai.app/copilot-avatar/programmer.png',
     messages: [
@@ -143,7 +143,7 @@ export const defaultSessionsForEN: Session[] = [
   },
   {
     id: '776eac23-7b4a-40da-91cd-f233bb4742ed',
-    name: 'Translator (Example)',
+    name: '翻译助手（示例）',
     type: 'chat',
     picUrl: 'https://static.chatboxai.app/copilot-avatar/translator.jpeg',
     messages: [
@@ -298,7 +298,7 @@ export const defaultSessionsForCN: Session[] = [
 
 export const imageCreatorSessionForCN: Session = {
   id: 'chatbox-chat-demo-image-creator',
-  name: 'Image Creator (Example)',
+  name: '图片生成（示例）',
   type: 'picture',
   starred: true,
   settings: {
@@ -411,7 +411,7 @@ export const imageCreatorSessionForCN: Session = {
 
 export const imageCreatorSessionForEN: Session = {
   id: 'chatbox-chat-demo-image-creator',
-  name: 'Image Creator (Example)',
+  name: '图片生成（示例）',
   type: 'picture',
   starred: true,
   settings: {

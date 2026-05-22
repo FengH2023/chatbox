@@ -4,7 +4,6 @@ import {
   IconCirclePlus,
   IconCode,
   IconHelpCircle,
-  IconInfoCircle,
   IconLayoutSidebarLeftCollapse,
   IconMessageChatbot,
   IconPhotoPlus,
@@ -287,18 +286,6 @@ export default function Sidebar() {
                 <ScalableIcon icon={IconSettingsFilled} size={20} />
               </ActionIcon>
 
-              {/* <Text
-                c="chatbox-tertiary"
-                size="sm"
-                ml="auto"
-                className="cursor-pointer"
-                onClick={() => {
-                  navigate({ to: '/about' })
-                  setShowSidebar(false)
-                }}
-              >
-                {`${t('About')} ${/\d/.test(versionHook.version) ? `(${versionHook.version})` : ''}`}
-              </Text> */}
             </Flex>
           ) : (
             <>
@@ -349,22 +336,6 @@ export default function Sidebar() {
                   p="xs"
                 />
               )}
-              <NavLink
-                c="chatbox-tertiary"
-                className="rounded"
-                label={
-                  <Flex align="center" gap={6}>
-                    <span>{`${t('About')} ${/\d/.test(versionHook.version) ? `(${versionHook.version})` : ''}`}</span>
-                    {CHATBOX_BUILD_PLATFORM === 'android' && versionHook.needCheckUpdate && (
-                      <Box w={8} h={8} miw={8} bg="chatbox-brand" style={{ borderRadius: '50%' }} />
-                    )}
-                  </Flex>
-                }
-                leftSection={<ScalableIcon icon={IconInfoCircle} size={20} />}
-                onClick={() => navigate({ to: '/about' })}
-                variant="light"
-                p="xs"
-              />
             </>
           )}
         </Stack>

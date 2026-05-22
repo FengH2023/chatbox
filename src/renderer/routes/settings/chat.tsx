@@ -188,7 +188,7 @@ export function RouteComponent() {
         {/* Top P */}
         <Stack gap="xxs">
           <Flex align="center" gap="xs">
-            <Text size="sm">Top P</Text>
+            <Text size="sm">{t('Top P')}</Text>
             <Tooltip
               label={t(
                 'The topP parameter controls the diversity of AI responses: lower values make the output more focused and predictable, while higher values allow for more varied and creative replies.'

@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Flex, Indicator, Stack, Text } from '@mantine/core'
+import { ActionIcon, Box, Flex, Stack, Text } from '@mantine/core'
 import {
   IconAdjustmentsHorizontal,
   IconBook,
@@ -8,10 +8,8 @@ import {
   IconChevronRight,
   IconCircleDottedLetterM,
   IconFileText,
-  IconInfoCircle,
   IconKeyboard,
   IconMessages,
-  IconSparkles,
   IconWorldWww,
 } from '@tabler/icons-react'
 import { createFileRoute, Link, Outlet, useCanGoBack, useRouter, useRouterState } from '@tanstack/react-router'
@@ -21,37 +19,31 @@ import { Toaster } from 'sonner'
 import Divider from '@/components/common/Divider'
 import Page from '@/components/layout/Page'
 import { ScalableIcon } from '@/components/common/ScalableIcon'
-import { useProviders } from '@/hooks/useProviders'
 import { useIsSmallScreen } from '@/hooks/useScreenChange'
 import platform from '@/platform'
 import { featureFlags } from '@/utils/feature-flags'
 
 const ITEMS = [
   {
-    key: 'chatbox-ai',
-    label: 'Chatbox AI',
-    icon: <IconSparkles className="w-full h-full" />,
-  },
-  {
     key: 'provider',
-    label: 'Model Provider',
+    label: '模型提供方',
     icon: <IconCategory className="w-full h-full" />,
   },
   {
     key: 'default-models',
-    label: 'Default Models',
+    label: '默认模型',
     icon: <IconBox className="w-full h-full" />,
   },
   {
     key: 'web-search',
-    label: 'Web Search',
+    label: '联网搜索',
     icon: <IconWorldWww className="w-full h-full" />,
   },
   ...(featureFlags.mcp
     ? [
         {
           key: 'mcp',
-          label: 'MCP',
+          label: 'MCP 服务',
           icon: <IconCircleDottedLetterM className="w-full h-full" />,
         },
       ]
@@ -60,19 +52,19 @@ const ITEMS = [
     ? [
         {
           key: 'knowledge-base',
-          label: 'Knowledge Base',
+          label: '知识库',
           icon: <IconBook className="w-full h-full" />,
         },
       ]
     : []),
   {
     key: 'document-parser',
-    label: 'Document Parser',
+    label: '文档解析',
     icon: <IconFileText className="w-full h-full" />,
   },
   {
     key: 'chat',
-    label: 'Chat Settings',
+    label: '聊天设置',
     icon: <IconMessages className="w-full h-full" />,
   },
   ...(platform.type === 'mobile'
@@ -80,13 +72,13 @@ const ITEMS = [
     : [
         {
           key: 'hotkeys',
-          label: 'Keyboard Shortcuts',
+          label: '快捷键',
           icon: <IconKeyboard className="w-full h-full" />,
         },
       ]),
   {
     key: 'general',
-    label: 'General Settings',
+    label: '通用设置',
     icon: <IconAdjustmentsHorizontal className="w-full h-full" />,
   },
 ]
@@ -130,8 +122,6 @@ export function SettingsRoot() {
   const routerState = useRouterState()
   const key = routerState.location.pathname.split('/')[2]
   const isSmallScreen = useIsSmallScreen()
-  const { providers: availableProviders } = useProviders()
-  const isChatboxAIActivated = availableProviders.some((p) => p.id === 'chatbox-ai')
 
   return (
     <Flex flex={1} h="100%" miw={isSmallScreen ? undefined : 800}>
@@ -180,9 +170,6 @@ export function SettingsRoot() {
                 >
                   {t(item.label)}
                 </Text>
-                {item.key === 'chatbox-ai' && isChatboxAIActivated && (
-                  <Indicator size={8} color="chatbox-success" className="ml-auto" />
-                )}
                 {isSmallScreen && (
                   <ScalableIcon icon={IconChevronRight} size={20} className="!text-chatbox-tint-tertiary" />
                 )}
@@ -192,35 +179,6 @@ export function SettingsRoot() {
             </Link>
           ))}
 
-          {isSmallScreen && (
-            <Link to={`/about`} className={'block no-underline w-full'}>
-              <Flex
-                component="span"
-                gap="xs"
-                p="md"
-                pr="xl"
-                py="sm"
-                align="center"
-                c={'chatbox-secondary'}
-                className={clsx(' cursor-pointer select-none rounded-md')}
-              >
-                <Box component="span" flex="0 0 auto" w={20} h={20} mr="xs">
-                  <ScalableIcon icon={IconInfoCircle} size={20} />
-                </Box>
-                <Text
-                  flex={1}
-                  lineClamp={1}
-                  span={true}
-                  className={`!text-inherit ${isSmallScreen ? 'min-h-[32px] leading-[32px]' : ''}`}
-                >
-                  {t('About')}
-                </Text>
-                <ScalableIcon icon={IconChevronRight} size={20} className="!text-chatbox-tint-tertiary" />
-              </Flex>
-
-              {isSmallScreen && <Divider />}
-            </Link>
-          )}
         </Stack>
       )}
       {!(isSmallScreen && routerState.location.pathname === '/settings') && (

@@ -97,7 +97,7 @@ function Index() {
         selectedCopilot?.avatar?.type === 'storage-key' ? selectedCopilot.avatar.storageKey : undefined,
       picUrl: selectedCopilot?.avatar?.type === 'url' ? selectedCopilot.avatar.url : selectedCopilot?.picUrl,
       backgroundImage: selectedCopilot?.backgroundImage,
-      name: selectedCopilot?.name || 'Untitled',
+      name: selectedCopilot?.name || '未命名',
       messages: selectedCopilot
         ? [
             {
@@ -132,7 +132,7 @@ function Index() {
         assistantAvatarKey: c.avatar?.type === 'storage-key' ? c.avatar.storageKey : undefined,
         picUrl: c.avatar?.type === 'url' ? c.avatar.url : c.picUrl,
         backgroundImage: c.backgroundImage,
-        name: c.name || 'Untitled',
+        name: c.name || '未命名',
         messages: [
           {
             id: uuidv4(),

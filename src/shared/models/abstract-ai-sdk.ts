@@ -4,6 +4,7 @@ import {
   type EmbeddingModel,
   type FinishReason,
   experimental_generateImage as generateImage,
+  generateText,
   type ImageModel,
   type JSONValue,
   type LanguageModelUsage,
@@ -657,6 +658,47 @@ export default abstract class AbstractAISDKModel implements ModelInterface {
     )
   }
 
+  private async handleNonStreamingCompletion<T extends ToolSet>(
+    model: LanguageModelV3,
+    coreMessages: ModelMessage[],
+    options: CallChatCompletionOptions<T>,
+    callSettings: CallSettings
+  ): Promise<StreamTextResult> {
+    const result = await generateText({
+      model,
+      messages: coreMessages,
+      stopWhen: stepCountIs(options.maxSteps || Number.MAX_SAFE_INTEGER),
+      tools: options.tools,
+      abortSignal: options.signal,
+      ...callSettings,
+      stream: false,
+    })
+
+    const contentParts: MessageContentParts = []
+    if (result.reasoningText) {
+      contentParts.push({
+        type: 'reasoning',
+        text: result.reasoningText,
+        duration: 0,
+      } as MessageReasoningPart)
+    }
+    if (result.text) {
+      contentParts.push({
+        type: 'text',
+        text: result.text,
+      })
+    }
+
+    return this.finalizeResult(
+      contentParts,
+      {
+        usage: result.usage,
+        finishReason: result.finishReason,
+      },
+      options
+    )
+  }
+
   private async _callChatCompletion<T extends ToolSet>(
     coreMessages: ModelMessage[],
     options: CallChatCompletionOptions<T>
@@ -718,7 +760,10 @@ export default abstract class AbstractAISDKModel implements ModelInterface {
     })
 
     try {
-      const result = await this.handleStreamingCompletion(model, coreMessages, options, callSettings)
+      const result =
+        this.options.stream === false || callSettings.stream === false
+          ? await this.handleNonStreamingCompletion(model, coreMessages, options, callSettings)
+          : await this.handleStreamingCompletion(model, coreMessages, options, callSettings)
       options.onStatusChange?.(null)
       return result
     } catch (error) {

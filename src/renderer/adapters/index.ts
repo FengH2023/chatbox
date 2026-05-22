@@ -5,13 +5,13 @@ import platform from '@/platform'
 import storage from '@/storage'
 import { StorageKeyGenerator } from '@/storage/StoreStorage'
 import * as settingActions from '@/stores/settingActions'
-import { apiRequest } from '@/utils/request'
+import { apiRequest, isNativeMobileRuntime } from '@/utils/request'
 import { RendererSentryAdapter } from './sentry'
 
 export async function createModelDependencies(): Promise<ModelDependencies> {
   // 获取平台信息
   const platformInfo = {
-    type: platform.type,
+    type: isNativeMobileRuntime() ? 'mobile' : platform.type,
     platform: await platform.getPlatform(),
     os: getOS(),
     version: (await platform.getVersion()) || 'unknown',
@@ -39,6 +39,22 @@ export async function createModelDependencies(): Promise<ModelDependencies> {
         options?: { retry?: number; parseChatboxRemoteError?: boolean }
       ): Promise<Response> => {
         // 支持自定义选项的 fetch
+        if (isNativeMobileRuntime()) {
+          const method = init?.method || 'GET'
+          const headers = (init?.headers as Record<string, string>) || {}
+          if (method.toUpperCase() === 'POST') {
+            return apiRequest.post(url, headers, init?.body, {
+              signal: init?.signal || undefined,
+              retry: options?.retry,
+              useProxy: false,
+            })
+          }
+          return apiRequest.get(url, headers, {
+            signal: init?.signal || undefined,
+            retry: options?.retry,
+            useProxy: false,
+          })
+        }
         return afetch(url, init, options || {})
       },
       async apiRequest(options: ApiRequestOptions): Promise<Response> {
